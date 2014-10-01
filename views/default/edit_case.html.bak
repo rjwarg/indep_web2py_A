@@ -1,3 +1,21 @@
 {{extend 'layout.html'}}
-<h1>This is the default/edit_case.html template</h1>
-{{=BEAUTIFY(response._vars)}}
+<h1>Case Control</h1>
+
+{{=member.first_name + '  '  + member.last_name + ', '+ member.minst}}<br/>
+{{=form}}<br/>
+
+{{if hold >0:}}
+{{=A("Add Action", _class='btn', _href=(URL('edit_action', args=(hold))))}}
+{{pass}}
+<table>
+{{for action in actions:}}
+
+    <tr><td>{{=action.id}}</td>
+        <td>{{=action.action_id.action_name}}</td>
+        <td>{{=action.date_performed}}</td>
+        <td>{{=action.remarks}}</td>
+    </tr>
+    
+
+{{pass}}
+</table>

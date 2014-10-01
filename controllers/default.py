@@ -8,7 +8,7 @@
 ## - download is for downloading files uploaded in the db (does streaming)
 ## - call exposes all registered services (none by default)
 #########################################################################
-
+from datetime import date
 
 def index():
     
@@ -22,7 +22,23 @@ def get_members():
 def show_ajax():
     if request.vars.id:
        response.flash = "Now create a case for this person"
-#        redirect(URL('get_member', vars={'id':request.vars.id}))
+       redirect(URL('edit_case', args=(request.vars.id, 'new')))
+    return locals()
+
+def edit_action():
+    db.case_action.action_id.requires = IS_IN_DB(db,'case_action_master.id', '%(action_name)s')
+    form = SQLFORM(db.case_action)
+    form.vars.case_id = request.args(0)
+    if form.process(session=None, formname='indep').accepted:
+        response.flash = 'form accepted'
+        if request.env.http_referrer:
+            redirect(request.env.http_referrer)
+        else:
+            redirect(URL('edit_case', args=(request.args(0))))
+    elif form.errors:
+        response.flash = 'form has errors'
+    else:
+        response.flash = 'please fill in the form'
     return locals()
 
 def edit_case():
@@ -32,14 +48,25 @@ def edit_case():
         case_number = new_case_number()
         form = SQLFORM(db.case_master)
         form.vars.case_number = case_number
-        form.vars.member_id = 1001
-        
+        form.vars.member_id = request.args(0)
+        member = db.members(request.args(0))
+        hold = 0
+        # insert a new case_action record for the assignment
+  
     else:
         case = db.case_master(request.args(0))
+        member = db.members(case.member_id)
         form = SQLFORM(db.case_master, case)
+        # get list of actions
+        actions = db(db.case_action.case_id == case.id).select()
+        hold = case.id
         
     if form.process(session=None, formname='indep').accepted:
         response.flash = 'form accepted'
+        # if this is a new record then insert a new case_action
+        if hold ==0:
+              db.case_action.insert(case_id = form.vars.id, action_id = 1, date_performed = form.vars.date_assigned)
+        redirect(URL('index'))
     elif form.errors:
         response.flash = 'form has errors'
     else:
@@ -126,3 +153,11 @@ def data():
       LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
     """
     return dict(form=crud())
+def new_case_number():
+    
+ 
+    suffix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    date_part = date.today().strftime("%Y%m%d")
+    # howmany cases start with this date?
+    count = db(db.case_master.case_number.like(date_part +'%')).count()
+    return date_part + suffix[count:count+1]
