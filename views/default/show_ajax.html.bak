@@ -1,0 +1,40 @@
+{{extend 'layout.html'}}
+<script>  
+    function set_text(name, first_name, minst, id_no){
+        $("#name").val(name);
+        $("#first_name").val(first_name);
+        $("#minst").val(minst);
+        $("#id_no").val(id_no);
+    }
+        function myclear(){
+        
+        $("#name").val('');
+        $("#first_name").val('');
+        $("#minst").val('');
+        $("#id_no").val('');
+        $("#suggestions").html('');
+    }
+</script>
+<style>
+    #suggestions { position:relative;}
+    .suggestions { background: white; border: solid 1px #55a6c8;}
+    .suggestions DIV { padding:2px 4px 2px 4px;}
+</style>
+<button type='button' onclick='myclear()'>
+    clear
+</button>
+
+<form action=''>
+   <input type='text' id='name' name="name" class='ajax' style="width: 250px"/>
+   <input type='text' id='first_name' name="first_name" class='ajax' style="width: 250px"/>
+   <input type='text' id='minst' name="minst" class='ajax' style="width: 250px"/>
+    <input type='text' id='id_no' name="id_no" style="width: 250px"/><br/>
+    <button type='submit'>Create Case</button>
+    
+</form>
+<div style="position: absolute; " id="suggestions" class="suggestions"></div>
+<script>
+ 
+    $(".ajax").keyup(function(){
+        ajax('name_selector', ['name', 'first_name', 'minst'], 'suggestions')}); 
+ </script>
