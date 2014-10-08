@@ -5,17 +5,18 @@
 {{=form}}<br/>
 
 {{if hold >0:}}
-{{=A("Add Action", _class='btn', _href=(URL('edit_action', args=(hold))))}}
-{{pass}}
+{{=A("Add Action", _class='btn', _href=(URL('edit_action', args=(hold, 0))))}}
+
 <table>
 {{for action in actions:}}
 
     <tr><td>{{=action.id}}</td>
-        <td>{{=action.action_id.action_name}}</td>
+        <td>{{=A(action.action_id.action_name, _href=(URL('edit_action', args=(hold, action.id))))}}</td>
         <td>{{=action.date_performed}}</td>
         <td>{{=action.remarks}}</td>
     </tr>
     
 
+{{pass}}
 {{pass}}
 </table>

@@ -11,8 +11,12 @@
 from datetime import date
 
 def index():
-    
-    rows = db(db.case_master).select()
+    if request.args(0) == None:
+        rows = db(db.case_master.date_closed == None).select()
+    elif request.args(0) == 'C':
+        rows = db(db.case_master.date_closed ).select()      
+    else:
+        rows = db(db.case_master).select()
     return locals()
 
 def get_members():
@@ -27,8 +31,19 @@ def show_ajax():
 
 def edit_action():
     db.case_action.action_id.requires = IS_IN_DB(db,'case_action_master.id', '%(action_name)s')
-    form = SQLFORM(db.case_action)
-    form.vars.case_id = request.args(0)
+    action_id = request.args(1)
+    if action_id == '0':
+        form = SQLFORM(db.case_action)
+        form.vars.case_id = request.args(0)
+        case_id_name = db.case_master(request.args(0)).case_number
+        form.vars.action_id = request.args(1)
+        hold = [request.args(1), action_id, "new", case_id_name]
+    else:
+        action = db.case_action(action_id)
+        case_id_name = db.case_master(action.case_id).case_number
+        form = SQLFORM(db.case_action, action)
+        hold = [request.args(1), action_id, "existing"]
+    case_id_name         
     if form.process(session=None, formname='indep').accepted:
         response.flash = 'form accepted'
         if request.env.http_referrer:

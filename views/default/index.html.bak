@@ -2,7 +2,7 @@
 <h2>
     Active cases
 </h2>
-{{=A('Create New Case', _class='btn', _href=(URL('show_ajax)))}}
+{{=A('Create New Case', _class='btn', _href=(URL('show_ajax')))}}
 <table>
 
 {{for row in rows:}}
