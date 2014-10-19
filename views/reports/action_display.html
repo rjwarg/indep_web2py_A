@@ -1,0 +1,20 @@
+{{extend 'layout.html'}}
+<style>
+    tr:nth-child(even){background: #fff}
+    tr:nth-child(odd){background: #ccc}
+    th {background: #bbb}
+</style>
+<h1>Activity Report</h1>
+From: <b>{{=fd}} </b> To: <b>{{=td}}</b>
+<table border='true'>
+    <tr><th>Case Number</th><th>Client Name</th><th>Action</th><th>Date Performed</th><th>Remarks</th></tr>
+{{ for r in rows:}}
+    <tr>
+        <td>{{=r.case_id.case_number}}</td>
+        <td>{{=r.case_id.member_id.last_name}}</td>
+        <td>{{=r.action_id.action_name}}</td>
+        <td>{{=r.date_performed}}</td>
+        <td>{{=r.remarks}}</td>
+    </tr>
+{{pass}}
+</table>
