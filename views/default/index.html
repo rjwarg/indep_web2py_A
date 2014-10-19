@@ -1,7 +1,11 @@
 {{extend 'layout.html'}}
+{{=A('Active Cases', _class='btn', _href=(URL('index')))}}
+{{=A('All Cases', _class='btn', _href=(URL('index', args=('A'))))}}
+{{=A('Closed Cases', _class='btn', _href=(URL('index', args=('C'))))}}
 <h2>
-    Active cases
+    {{= case_type}} cases
 </h2>
+
 {{=A('Create New Case', _class='btn', _href=(URL('show_ajax')))}}
 <table>
 
@@ -12,6 +16,7 @@
         <td>{{=row.member_id.last_name}}</td> 
         <td>{{=row.member_id.first_name}}</td>
         <td>{{=row.description}}</td>
+        <td>{{if row.date_closed:}}<B>CLOSED</B>{{pass}}</td>
     </tr>
 {{pass}}
 </table>

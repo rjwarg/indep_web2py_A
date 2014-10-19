@@ -1,17 +1,17 @@
 # coding: utf8
 # try something like
-import html
+import html, datetime
 
 def index(): return dict(message="hello from reports.py")
 
 def cases_pdf():
     
     db_rows = db(db.case_master).select()
-    response.title = "Indep Counsel Cases &cet"
+    response.title = "Indep Counsel's <> Cases &cet"
     
     # define header and footers:
     head = THEAD(TR(TH("case number",_width="20%"), 
-                    TH("Member",_width="60%"),
+                    TH("Descr",_width="50%"),
                     TH("Active date",_width="20%"), 
                     _bgcolor="#A0A0A0"))
     foot = TFOOT(TR(TH("Footer 1",_width="20%"), 
@@ -23,9 +23,9 @@ def cases_pdf():
     rows = []
     rows.append("Helloworld's best")
     for row in db_rows:
-        rows.append(TR(TD("col1's"),
-                          TD("col2"),
-                          TD("col3")  ))
+        rows.append(TR(TD(row.case_number, _width="20%"),
+                          TD(row.description, _width="50%"),
+                          TD(str(row.date_assigned)), _width="20%"  ))
 
     
     # make the table object
@@ -51,20 +51,24 @@ def cases_pdf():
                 self.cell(0,10,txt,0,0,'C')
                     
         pdf=MyFPDF()
-        data = "<table border='1' align='center' width='100%'><tr><td width='20%'>this is it's table entry</td><td width='20%'>I'm it's master now</td></tr></table>"
-        # first page:
         pdf.add_page()
-        pdf.write_html(str(XML("<anything>hello yourself.<B> I'm Richard.</B></anything>")))
-        pdf.write_html(str(XML(data)))
         data = "<table border='1' align='center' width='100%'> "
-        data += "<tr bgcolor='#a0a0a0'><th width='60%'>case number</th><th width='20%'>Assigned</th> </tr>"
+        data += "<tr bgcolor='#a0a0a0'><th width='20%'>case number</th><th width='50%'>Description<th width='20%'>Assigned</th> </tr>"
+        data += "<tr><td width='20%'>Hollywood's Best</td><td width='50%'>&lt; &gt; &amp;</td><td width='20%'></td></tr>"
         for row in db_rows:
-             data += "<tr><td width='60%'>"+row.case_number+"</td><td width='20%'>"+str(row.date_assigned)+"</td></tr>"
+             data += "<tr><td width='20%'>"+row.case_number+"</td><td width='50%'>"+row.description+"</td><td width='20%'>"+str(row.date_assigned)+"</td></tr>"
                 
         data += "</table>"
+        f=open('tempdata.txt', 'w')
+        f.write("\nDATA FROM XML\n")
         pdf.write_html(data)
-        
+        f.write(data)
+        f.write('\nDATA FROM TABLE\n')
         pdf.write_html(str(XML(table, sanitize=False)))
+        # inspect the html
+       
+        f.write(str(XML(table)))
+        f.flush()
         response.headers['Content-Type']='application/pdf'
         return pdf.output(dest='S')
     else:
@@ -74,6 +78,38 @@ def cases_pdf():
 def case_rpt():
     rows = db().select(db.case_master.ALL)
     return dict(rows = rows)
+
+def action_display():
+    args = request.args
+    from_date =args[0]
+    to_date = args[1]
+    t = type(from_date)
+    fd = datetime.datetime.strptime(from_date, "%Y-%m-%d").date()
+    td = datetime.datetime.strptime(to_date, "%Y-%m-%d").date()
+    tt = type(fd)
+    query = db.case_action.date_performed >= fd
+    query &= db.case_action.date_performed <= td
+    rows =  db(query).select(orderby=db.case_action.case_id)
+    ttt = type(rows[0].date_performed)
+    response.title = "Indep Counsel"
+    return locals()
+
+def action_rpt():
+    rows = db().select(db.case_action.ALL)
+    form = FORM('From Date:', INPUT(_name='from_date', _class='date', widget=SQLFORM.widgets.date.widget, requires=IS_DATE()),
+                'To Date:', INPUT( _name='to_date', _class='date', widget=SQLFORM.widgets.date.widget, requires=IS_DATE()),
+                INPUT(_type ='submit'))  
+    if form.accepts(request,session):
+        response.flash = 'form accepted '
+        redirect(URL('action_display', args=(request.vars.from_date, request.vars.to_date)))
+    elif form.errors:
+        response.flash = 'form has errors'
+    else:
+        response.flash = 'please fill the form'
+        
+    response.title = "Indep Counsel"
+    return locals()
+
 
 def case_rtf():
 

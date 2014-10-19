@@ -13,10 +13,13 @@ from datetime import date
 def index():
     if request.args(0) == None:
         rows = db(db.case_master.date_closed == None).select()
+        case_type = "Active"
     elif request.args(0) == 'C':
         rows = db(db.case_master.date_closed ).select()      
+        case_type = "Closed"
     else:
         rows = db(db.case_master).select()
+        case_type = "All"
     return locals()
 
 def get_members():
