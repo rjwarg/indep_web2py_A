@@ -7,7 +7,7 @@ def index(): return dict(message="hello from reports.py")
 def cases_pdf():
     
     db_rows = db(db.case_master).select()
-    response.title = "Indep Counsel's <> Cases &cet"
+    response.title = "Indep Counsel's Cases"
     
     # define header and footers:
     head = THEAD(TR(TH("case number",_width="20%"), 

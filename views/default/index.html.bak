@@ -1,7 +1,8 @@
 {{extend 'layout.html'}}
-{{=A('Open Cases', _class='btn', _href=(URL('index')))}}
+{{=A('Active Cases', _class='btn', _href=(URL('index')))}}
 {{=A('All Cases', _class='btn', _href=(URL('index', args=('A'))))}}
 {{=A('Closed Cases', _class='btn', _href=(URL('index', args=('C'))))}}
+{{=A('PDF Listing', _class='btn', _href=(URL('reports','cases_pdf')))}}
 <h2>
     {{= case_type}} cases
 </h2>
