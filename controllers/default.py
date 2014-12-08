@@ -10,22 +10,25 @@
 #########################################################################
 from datetime import date
 
+@auth.requires_membership('indep')
 def index():
+    u = auth.user
+    response.flash = "who is logged in? " + u.first_name + " " + u.last_name + " " +str( u.id)
     if request.args(0) == None:
-        rows = db(db.case_master.date_closed == None).select()
+        rows = db(db.case_master.date_closed == None and db.case_master.assigned_to == u.id).select()
         case_type = "Active"
     elif request.args(0) == 'C':
-        rows = db(db.case_master.date_closed ).select()      
+        rows = db(db.case_master.date_closed and db.case_master.assigned_to == u.id).select()      
         case_type = "Closed"
     else:
-        rows = db(db.case_master).select()
+        rows = db(db.case_master and db.case_master.assigned_to == u.id).select()
         case_type = "All"
     return locals()
-
+@auth.requires_login()
 def get_members():
     members = db(db.members.last_name.startswith(request.args[0])).select()
     return locals()
-
+@auth.requires_login()
 def show_ajax():
     if request.vars.id:
        response.flash = "Now create a case for this person"
@@ -67,6 +70,7 @@ def edit_case():
         form = SQLFORM(db.case_master)
         form.vars.case_number = case_number
         form.vars.member_id = request.args(0)
+        form.vars.assigned_to = auth.user.id
         member = db.members(request.args(0))
         hold = 0
         # insert a new case_action record for the assignment
@@ -90,6 +94,27 @@ def edit_case():
     else:
         response.flash = 'please fill in the form'
         
+    return locals()
+
+def load_db_members():
+    rows = db2(db2.member.stat != 'R').select()
+#    db.members.truncate()
+    insert_count = 0
+    read_count = 0
+    for r in rows:
+        if db(db.members.member_id == r.id_no).count() == 0:
+            db.members.insert(last_name = r.name,
+                          first_name = r.first_name,
+                          minst = r.minst,
+                          address = r.address,
+                          zip = r.zip,
+                          member_id = r.id_no,
+                          stat = r.stat)
+            insert_count += 1
+        if read_count % 500 == 0:
+            response.flash = "Progress Count = " + str(read_count)
+            
+    rows = insert_count
     return locals()
 
 def name_selector():

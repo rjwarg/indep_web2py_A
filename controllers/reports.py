@@ -6,39 +6,22 @@ def index(): return dict(message="hello from reports.py")
 
 def cases_pdf():
     
-    db_rows = db(db.case_master).select()
+    db_rows = db(db.case_master.assigned_to == auth.user.id).select()
     response.title = "Indep Counsel's Cases"
     
-    # define header and footers:
-    head = THEAD(TR(TH("case number",_width="20%"), 
-                    TH("Descr",_width="50%"),
-                    TH("Active date",_width="20%"), 
-                    _bgcolor="#A0A0A0"))
-    foot = TFOOT(TR(TH("Footer 1",_width="20%"), 
-                    TH("Footer 2",_width="60%"),
-                    TH("Footer 3",_width="20%"),
-                    _bgcolor="#E0E0E0"))
-    
-    # create several rows:
+   
     rows = []
-    rows.append("Helloworld's best")
-    for row in db_rows:
-        rows.append(TR(TD(row.case_number, _width="20%"),
-                          TD(row.description, _width="50%"),
-                          TD(str(row.date_assigned)), _width="20%"  ))
+   
+   
 
     
-    # make the table object
-    body = TBODY(*rows)
-    print body
-    table = TABLE(*[head,foot, body], 
-                  _border="1", _align="center", _width="100%")
+   
 
-    if request.extension=="pdf":
-        from gluon.contrib.pyfpdf import FPDF, HTMLMixin
+   
+    from gluon.contrib.pyfpdf import FPDF, HTMLMixin
 
         # define our FPDF class (move to modules if it is reused  frequently)
-        class MyFPDF(FPDF, HTMLMixin):
+    class MyFPDF(FPDF, HTMLMixin):
             def header(self):
                 self.set_font('Arial','B',15)
                 self.cell(0,10, response.title ,1,0,'C')
@@ -50,36 +33,40 @@ def cases_pdf():
                 txt = 'Page %s of %s' % (self.page_no(), self.alias_nb_pages())
                 self.cell(0,10,txt,0,0,'C')
                     
-        pdf=MyFPDF()
-        pdf.add_page()
-        data = "<table border='1' align='center' width='100%'> "
-        data += "<tr bgcolor='#a0a0a0'><th width='20%'>case number</th><th width='50%'>Description<th width='20%'>Assigned</th> </tr>"
-        data += "<tr><td width='20%'>Hollywood's Best</td><td width='50%'>&lt; &gt; &amp;</td><td width='20%'></td></tr>"
-        for row in db_rows:
-             data += "<tr><td width='20%'>"+row.case_number+"</td><td width='50%'>"+row.description+"</td><td width='20%'>"+str(row.date_assigned)+"</td></tr>"
-                
-        data += "</table>"
-        f=open('tempdata.txt', 'w')
-        f.write("\nDATA FROM XML\n")
-        pdf.write_html(data)
-        f.write(data)
-        f.write('\nDATA FROM TABLE\n')
-        pdf.write_html(str(XML(table, sanitize=False)))
-        # inspect the html
+    pdf=MyFPDF()
+    pdf.add_page()
+    pdf.set_font('arial')
+
+    # change the font
+    pdf.set_font('helvetica', size=9)
+    pdf.set_fill_color(200)
+    pdf.cell(25,5,'Case Number',1, fill=True)
+    pdf.cell(35,5,'Member Name',1, fill=True)
+    pdf.cell(25,5,'Date Assigned',1, fill=True)
+    pdf.cell(95,5,'Description',border=1, fill=True )
+    pdf.ln(5)
+    pdf.ln(5)
+    pdf.set_fill_color(255,200,200)
+    filler = False
+    for row in db_rows:
+            pdf.cell(25,5,row.case_number,1, fill=filler)
+
+            pdf.cell(35,5,row.member_id.last_name,1,fill=filler)
+            pdf.cell(25,5,str(row.date_assigned),1,fill=filler)
+            pdf.multi_cell(95,5,row.description,border=1,fill=filler )
+            filler = not filler
+
        
-        f.write(str(XML(table)))
-        f.flush()
-        response.headers['Content-Type']='application/pdf'
-        return pdf.output(dest='S')
-    else:
-        # normal html view:
-        return locals()
+    response.headers['Content-Type']='application/pdf'
+    return pdf.output(dest='S')
+    
 
 def case_rpt():
     rows = db().select(db.case_master.ALL)
     return dict(rows = rows)
 
 def action_display():
+    u = auth.user
     args = request.args
     from_date =args[0]
     to_date = args[1]
@@ -89,13 +76,21 @@ def action_display():
     tt = type(fd)
     query = db.case_action.date_performed >= fd
     query &= db.case_action.date_performed <= td
-    rows =  db(query).select(orderby=db.case_action.case_id)
-    ttt = type(rows[0].date_performed)
+    query &= (db.case_action.case_id == db.case_master.id) 
+    query &= (db.case_master.assigned_to == u.id)
+    rows =  db(query).select(db.case_action.ALL)# orderby=db.case_action.case_id)
+
+#    rows = []
+#    for r in rows_a:
+#        if r.case_id.assigned_to == u.id:
+#            rows.append(r)
+            
     response.title = "Indep Counsel"
     return locals()
 
 def action_rpt():
-    rows = db().select(db.case_action.ALL)
+    u = auth.user
+    rows = db(db.case_action.id ).select()
     form = FORM('From Date:', INPUT(_name='from_date', _class='date', widget=SQLFORM.widgets.date.widget, requires=IS_DATE()),
                 'To Date:', INPUT( _name='to_date', _class='date', widget=SQLFORM.widgets.date.widget, requires=IS_DATE()),
                 INPUT(_type ='submit'))  
