@@ -8,10 +8,16 @@
 ## if SSL/HTTPS is properly configured and you want all HTTP requests to
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
-
+import akey.py
+ifxpw = akey.get_ifxpw()
+mssqlpw = akey.get_mssqlpw()
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('mysql://rjwarg:ccpoa@mysql.server/indep',pool_size=1,check_reserved=['all'])
+   # db4 = DAL('mysql://rjwarg:ccpoa@mysql.server/rjwarg$indep',pool_size=1,check_reserved=['all'])
+    db1 = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
+    db2 = DAL('informix://informix:'+ifxpw+'@ccpoa_dev/ccpoa')
+    db3 = DAL('mssql://django:'+mssqlpw+'@TEST-SQL-SERVER/DEVEL?Driver={FreeTDS}')
+    db = DAL('mssql://web2py:'+mssqlpw+'@TEST-SQL-SERVER/web2py?Driver={FreeTDS}')
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -45,7 +51,7 @@ auth = Auth(db)
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
 ## create all tables needed by auth if not custom tables
-auth.define_tables(username=False, signature=False)
+auth.define_tables(migrate=False)
 
 ## configure email
 mail = auth.settings.mailer

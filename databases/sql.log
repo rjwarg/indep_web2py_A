@@ -1,59 +1,4 @@
-timestamp: 2014-09-30T18:59:44.198685
-CREATE TABLE auth_user(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name CHAR(128),
-    last_name CHAR(128),
-    email CHAR(512),
-    password CHAR(512),
-    registration_key CHAR(512),
-    reset_password_key CHAR(512),
-    registration_id CHAR(512)
-);
-success!
-timestamp: 2014-09-30T18:59:44.252805
-CREATE TABLE auth_group(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    role CHAR(512),
-    description TEXT
-);
-success!
-timestamp: 2014-09-30T18:59:44.299566
-CREATE TABLE auth_membership(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
-    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
-);
-success!
-timestamp: 2014-09-30T18:59:44.344743
-CREATE TABLE auth_permission(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
-    name CHAR(512),
-    table_name CHAR(512),
-    record_id INTEGER
-);
-success!
-timestamp: 2014-09-30T18:59:44.379574
-CREATE TABLE auth_event(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    time_stamp TIMESTAMP,
-    client_ip CHAR(512),
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
-    origin CHAR(512),
-    description TEXT
-);
-success!
-timestamp: 2014-09-30T18:59:44.421943
-CREATE TABLE auth_cas(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
-    created_on TIMESTAMP,
-    service CHAR(512),
-    ticket CHAR(512),
-    renew CHAR(1)
-);
-success!
-timestamp: 2014-09-30T19:04:15.137739
+timestamp: 2014-10-29T11:18:09.511826
 CREATE TABLE members(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     last_name CHAR(512),
@@ -68,7 +13,7 @@ CREATE TABLE members(
     modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE
 );
 success!
-timestamp: 2014-09-30T19:04:15.237729
+timestamp: 2014-10-29T11:18:09.526875
 CREATE TABLE case_action_master(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     action_name CHAR(512),
@@ -80,7 +25,7 @@ CREATE TABLE case_action_master(
     modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE
 );
 success!
-timestamp: 2014-09-30T19:04:15.298154
+timestamp: 2014-10-29T11:18:09.539242
 CREATE TABLE case_master(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     case_number CHAR(512),
@@ -96,7 +41,7 @@ CREATE TABLE case_master(
     modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE
 );
 success!
-timestamp: 2014-09-30T19:04:15.360900
+timestamp: 2014-10-29T11:18:09.551511
 CREATE TABLE case_action(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     case_id INTEGER REFERENCES case_master (id) ON DELETE CASCADE,
@@ -110,125 +55,297 @@ CREATE TABLE case_action(
     modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE
 );
 success!
-timestamp: 2014-09-30T20:52:55.680694
+timestamp: 2014-10-29T11:19:51.693904
 CREATE TABLE auth_user(
-    id INT AUTO_INCREMENT NOT NULL,
-    first_name VARCHAR(128),
-    last_name VARCHAR(128),
-    email VARCHAR(512),
-    password VARCHAR(512),
-    registration_key VARCHAR(512),
-    reset_password_key VARCHAR(512),
-    registration_id VARCHAR(512),
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
 success!
-timestamp: 2014-09-30T20:52:56.067443
+timestamp: 2014-10-29T11:19:51.706320
 CREATE TABLE auth_group(
-    id INT AUTO_INCREMENT NOT NULL,
-    role VARCHAR(512),
-    description LONGTEXT,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
 success!
-timestamp: 2014-09-30T20:52:56.143074
+timestamp: 2014-10-29T11:19:51.716411
 CREATE TABLE auth_membership(
-    id INT AUTO_INCREMENT NOT NULL,
-    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
-    group_id INT, INDEX group_id__idx (group_id), FOREIGN KEY (group_id) REFERENCES auth_group (id) ON DELETE CASCADE,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
 success!
-timestamp: 2014-09-30T20:52:56.295360
+timestamp: 2014-10-29T11:19:51.729061
 CREATE TABLE auth_permission(
-    id INT AUTO_INCREMENT NOT NULL,
-    group_id INT, INDEX group_id__idx (group_id), FOREIGN KEY (group_id) REFERENCES auth_group (id) ON DELETE CASCADE,
-    name VARCHAR(512),
-    table_name VARCHAR(512),
-    record_id INT,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
 success!
-timestamp: 2014-09-30T20:52:56.384113
+timestamp: 2014-10-29T11:19:51.741812
 CREATE TABLE auth_event(
-    id INT AUTO_INCREMENT NOT NULL,
-    time_stamp DATETIME,
-    client_ip VARCHAR(512),
-    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
-    origin VARCHAR(512),
-    description LONGTEXT,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin CHAR(512),
+    description TEXT
+);
 success!
-timestamp: 2014-09-30T20:52:56.447027
+timestamp: 2014-10-29T11:19:51.753268
 CREATE TABLE auth_cas(
-    id INT AUTO_INCREMENT NOT NULL,
-    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
-    created_on DATETIME,
-    service VARCHAR(512),
-    ticket VARCHAR(512),
-    renew CHAR(1),
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
 success!
-timestamp: 2014-09-30T20:52:56.529212
+timestamp: 2014-10-29T14:23:15.827693
+ALTER TABLE members ADD stat CHAR(length=3);
+timestamp: 2014-10-29T14:24:28.396706
+ALTER TABLE members ADD stat CHAR(length=3);
+timestamp: 2014-10-29T14:25:45.916298
+ALTER TABLE members ADD stat CHAR(length=3);
+timestamp: 2014-10-29T14:28:33.794260
+ALTER TABLE members ADD stat CHAR(512);
+timestamp: 2014-10-29T14:28:33.805687
+ALTER TABLE members ADD member_id INTEGER;
+success!
+DELETE FROM members;
+DELETE FROM sqlite_sequence WHERE name='members';
+success!
+DELETE FROM members;
+DELETE FROM sqlite_sequence WHERE name='members';
+success!
+timestamp: 2014-11-03T08:00:32.088605
+CREATE TABLE auth_user(
+    id INT IDENTITY PRIMARY KEY,
+    first_name VARCHAR(128) NULL,
+    last_name VARCHAR(128) NULL,
+    email VARCHAR(512) NULL,
+    password VARCHAR(512) NULL,
+    registration_key VARCHAR(512) NULL,
+    reset_password_key VARCHAR(512) NULL,
+    registration_id VARCHAR(512) NULL
+);
+timestamp: 2014-11-03T08:10:07.582258
+CREATE TABLE auth_user(
+    id INT IDENTITY PRIMARY KEY,
+    first_name VARCHAR(128) NULL,
+    last_name VARCHAR(128) NULL,
+    email VARCHAR(512) NULL,
+    password VARCHAR(512) NULL,
+    registration_key VARCHAR(512) NULL,
+    reset_password_key VARCHAR(512) NULL,
+    registration_id VARCHAR(512) NULL
+);
+timestamp: 2014-11-03T08:12:47.354199
+CREATE TABLE auth_user(
+    id INT IDENTITY PRIMARY KEY,
+    first_name VARCHAR(128) NULL,
+    last_name VARCHAR(128) NULL,
+    email VARCHAR(512) NULL,
+    password VARCHAR(512) NULL,
+    registration_key VARCHAR(512) NULL,
+    reset_password_key VARCHAR(512) NULL,
+    registration_id VARCHAR(512) NULL
+);
+timestamp: 2014-11-03T08:33:55.889783
+CREATE TABLE auth_user(
+    id INT IDENTITY PRIMARY KEY,
+    first_name VARCHAR(128) NULL,
+    last_name VARCHAR(128) NULL,
+    email VARCHAR(512) NULL,
+    password VARCHAR(512) NULL,
+    registration_key VARCHAR(512) NULL,
+    reset_password_key VARCHAR(512) NULL,
+    registration_id VARCHAR(512) NULL
+);
+timestamp: 2014-11-03T08:38:06.016688
 CREATE TABLE members(
-    id INT AUTO_INCREMENT NOT NULL,
-    last_name VARCHAR(512),
-    first_name VARCHAR(512),
-    minst VARCHAR(512),
-    address VARCHAR(512),
-    zip VARCHAR(512),
-    is_active CHAR(1),
-    created_on DATETIME,
-    created_by INT, INDEX created_by__idx (created_by), FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    modified_on DATETIME,
-    modified_by INT, INDEX modified_by__idx (modified_by), FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INT IDENTITY PRIMARY KEY,
+    last_name VARCHAR(512) NULL,
+    first_name VARCHAR(512) NULL,
+    minst VARCHAR(512) NULL,
+    address VARCHAR(512) NULL,
+    zip VARCHAR(512) NULL,
+    member_id INT NULL,
+    stat VARCHAR(512) NULL
+);
 success!
-timestamp: 2014-09-30T20:52:56.713587
+timestamp: 2014-11-03T08:38:58.955717
 CREATE TABLE case_action_master(
-    id INT AUTO_INCREMENT NOT NULL,
-    action_name VARCHAR(512),
-    action_value VARCHAR(512),
-    is_active CHAR(1),
-    created_on DATETIME,
-    created_by INT, INDEX created_by__idx (created_by), FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    modified_on DATETIME,
-    modified_by INT, INDEX modified_by__idx (modified_by), FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INT IDENTITY PRIMARY KEY,
+    action_name VARCHAR(512) NULL,
+    action_value VARCHAR(512) NULL
+);
 success!
-timestamp: 2014-09-30T20:52:56.813260
+timestamp: 2014-11-03T08:38:58.966679
 CREATE TABLE case_master(
-    id INT AUTO_INCREMENT NOT NULL,
-    case_number VARCHAR(512),
-    member_id INT, INDEX member_id__idx (member_id), FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE CASCADE,
-    description LONGTEXT,
-    date_assigned DATE,
-    date_closed DATE,
-    dead_file_box_number VARCHAR(512),
-    is_active CHAR(1),
-    created_on DATETIME,
-    created_by INT, INDEX created_by__idx (created_by), FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    modified_on DATETIME,
-    modified_by INT, INDEX modified_by__idx (modified_by), FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INT IDENTITY PRIMARY KEY,
+    case_number VARCHAR(512) NULL,
+    member_id INT NULL, CONSTRAINT case_master_member_id__constraint FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE CASCADE,
+    description TEXT NULL,
+    date_assigned DATETIME NULL,
+    date_closed DATETIME NULL,
+    dead_file_box_number VARCHAR(512) NULL
+);
 success!
-timestamp: 2014-09-30T20:52:56.918424
+timestamp: 2014-11-03T08:38:58.976704
 CREATE TABLE case_action(
-    id INT AUTO_INCREMENT NOT NULL,
-    case_id INT, INDEX case_id__idx (case_id), FOREIGN KEY (case_id) REFERENCES case_master (id) ON DELETE CASCADE,
-    action_id INT, INDEX action_id__idx (action_id), FOREIGN KEY (action_id) REFERENCES case_action_master (id) ON DELETE CASCADE,
-    date_performed DATE,
-    remarks LONGTEXT,
-    is_active CHAR(1),
-    created_on DATETIME,
-    created_by INT, INDEX created_by__idx (created_by), FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    modified_on DATETIME,
-    modified_by INT, INDEX modified_by__idx (modified_by), FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB CHARACTER SET utf8;
+    id INT IDENTITY PRIMARY KEY,
+    case_id INT NULL, CONSTRAINT case_action_case_id__constraint FOREIGN KEY (case_id) REFERENCES case_master (id) ON DELETE CASCADE,
+    action_id INT NULL, CONSTRAINT case_action_action_id__constraint FOREIGN KEY (action_id) REFERENCES case_action_master (id) ON DELETE CASCADE,
+    date_performed DATETIME NULL,
+    remarks TEXT NULL
+);
 success!
+timestamp: 2014-11-03T08:42:16.723486
+CREATE TABLE auth_user(
+    id INT IDENTITY PRIMARY KEY,
+    first_name VARCHAR(128) NULL,
+    last_name VARCHAR(128) NULL,
+    email VARCHAR(512) NULL,
+    password VARCHAR(512) NULL,
+    registration_key VARCHAR(512) NULL,
+    reset_password_key VARCHAR(512) NULL,
+    registration_id VARCHAR(512) NULL
+);
+timestamp: 2014-11-03T08:47:07.861526
+CREATE TABLE auth_user(
+    id INT IDENTITY PRIMARY KEY,
+    first_name VARCHAR(128) NULL,
+    last_name VARCHAR(128) NULL,
+    email VARCHAR(512) NULL,
+    password VARCHAR(512) NULL,
+    registration_key VARCHAR(512) NULL,
+    reset_password_key VARCHAR(512) NULL,
+    registration_id VARCHAR(512) NULL,
+    is_active BIT NULL,
+    created_on DATETIME NULL,
+    created_by INT NULL, CONSTRAINT auth_user_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
+    modified_on DATETIME NULL,
+    modified_by INT NULL, CONSTRAINT auth_user_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE
+);
+TRUNCATE TABLE members ;
+TRUNCATE TABLE members ;
+timestamp: 2014-11-04T07:03:57.062989
+ALTER TABLE members ADD modified_by INT NULL; ALTER TABLE members ADD CONSTRAINT members_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:03:57.211452
+ALTER TABLE members ADD is_active BIT NULL;
+timestamp: 2014-11-04T07:03:57.371948
+ALTER TABLE members ADD created_by INT NULL; ALTER TABLE members ADD CONSTRAINT members_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:04.047255
+ALTER TABLE members ADD created_by INT NULL; ALTER TABLE members ADD CONSTRAINT members_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:04.151793
+ALTER TABLE members ADD created_on DATETIME NULL;
+timestamp: 2014-11-04T07:05:04.325510
+ALTER TABLE members ADD modified_on DATETIME NULL;
+success!
+timestamp: 2014-11-04T07:05:04.337660
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:09.305378
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:10.684774
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:11.948624
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:13.798837
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:15.455833
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:16.550597
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:05:33.783827
+ALTER TABLE members DROP COLUMN modified_by;
+timestamp: 2014-11-04T07:05:43.219577
+ALTER TABLE members DROP COLUMN modified_by;
+timestamp: 2014-11-04T07:09:30.648414
+ALTER TABLE members DROP COLUMN modified_by;
+timestamp: 2014-11-04T07:14:12.540625
+ALTER TABLE members DROP COLUMN modified_by;
+timestamp: 2014-11-04T07:15:32.922313
+ALTER TABLE case_action_master ADD modified_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:15:32.931790
+ALTER TABLE case_action_master ADD is_active BIT NULL;
+timestamp: 2014-11-04T07:15:32.933550
+ALTER TABLE case_action_master ADD created_by INT NULL; ALTER TABLE case_action_master ADD CONSTRAINT case_action_master_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:22:09.618920
+ALTER TABLE case_master ADD modified_by INT NULL; ALTER TABLE case_master ADD CONSTRAINT case_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:22:09.630155
+ALTER TABLE case_master ADD is_active BIT NULL;
+timestamp: 2014-11-04T07:22:09.631851
+ALTER TABLE case_master ADD created_by INT NULL; ALTER TABLE case_master ADD CONSTRAINT case_master_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:26:55.705697
+ALTER TABLE case_master ADD is_active BIT NULL;
+timestamp: 2014-11-04T07:26:55.708919
+ALTER TABLE case_master ADD created_by INT NULL; ALTER TABLE case_master ADD CONSTRAINT case_master_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE;
+timestamp: 2014-11-04T07:26:55.716755
+ALTER TABLE case_master ADD created_on DATETIME NULL;
+timestamp: 2014-11-04T07:26:55.719061
+ALTER TABLE case_master ADD modified_on DATETIME NULL;
+success!
+timestamp: 2014-11-04T07:30:10.068162
+ALTER TABLE case_master DROP COLUMN modified_by;
+timestamp: 2014-11-04T07:38:08.438759
+ALTER TABLE case_master ADD owner INT NULL; ALTER TABLE case_master ADD CONSTRAINT case_master_owner__constraint FOREIGN KEY (owner) REFERENCES auth_user (id) ON DELETE NO ACTION;
+timestamp: 2014-11-04T07:38:08.451631
+ALTER TABLE case_master DROP COLUMN modified_by;
+timestamp: 2014-11-04T07:41:02.868075
+ALTER TABLE case_master ADD owned_by INT NULL; ALTER TABLE case_master ADD CONSTRAINT case_master_owned_by__constraint FOREIGN KEY (owned_by) REFERENCES auth_user (id) ON DELETE NO ACTION;
+timestamp: 2014-11-04T07:50:36.267653
+CREATE TABLE case_master(
+    id INT IDENTITY PRIMARY KEY,
+    case_number VARCHAR(512) NULL,
+    member_id INT NULL, CONSTRAINT case_master_member_id__constraint FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE NO ACTION,
+    description TEXT NULL,
+    date_assigned DATETIME NULL,
+    date_closed DATETIME NULL,
+    dead_file_box_number VARCHAR(512) NULL,
+    owned_by INT NULL, CONSTRAINT case_master_owned_by__constraint FOREIGN KEY (owned_by) REFERENCES auth_user (id) ON DELETE NO ACTION
+);
+timestamp: 2014-11-04T08:00:58.887931
+CREATE TABLE case_master(
+    id INT IDENTITY PRIMARY KEY,
+    case_number VARCHAR(512) NULL,
+    member_id INT NULL, CONSTRAINT case_master_member_id__constraint FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE NO ACTION,
+    description TEXT NULL,
+    date_assigned DATETIME NULL,
+    date_closed DATETIME NULL,
+    dead_file_box_number VARCHAR(512) NULL,
+    is_active BIT NULL,
+    created_on DATETIME NULL,
+    created_by INT NULL, CONSTRAINT case_master_created_by__constraint FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
+    modified_on DATETIME NULL,
+    modified_by INT NULL, CONSTRAINT case_master_modified_by__constraint FOREIGN KEY (modified_by) REFERENCES auth_user (id) ON DELETE CASCADE
+);
+timestamp: 2014-11-04T08:05:19.815926
+CREATE TABLE case_master(
+    id INT IDENTITY PRIMARY KEY,
+    case_number VARCHAR(512) NULL,
+    member_id INT NULL, CONSTRAINT case_master_member_id__constraint FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE NO ACTION,
+    description TEXT NULL,
+    date_assigned DATETIME NULL,
+    date_closed DATETIME NULL,
+    dead_file_box_number VARCHAR(512) NULL
+);
+timestamp: 2014-11-04T08:05:52.203889
+CREATE TABLE case_master(
+    id INT IDENTITY PRIMARY KEY,
+    case_number VARCHAR(512) NULL,
+    member_id INT NULL, CONSTRAINT case_master_member_id__constraint FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE NO ACTION,
+    description TEXT NULL,
+    date_assigned DATETIME NULL,
+    date_closed DATETIME NULL,
+    dead_file_box_number VARCHAR(512) NULL
+);

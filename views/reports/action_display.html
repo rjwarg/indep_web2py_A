@@ -7,7 +7,7 @@
 <h1>Activity Report</h1>
 From: <b>{{=fd}} </b> To: <b>{{=td}}</b>
 <table border='true'>
-    <tr><th>Case Number</th><th>Client Name</th><th>Action</th><th>Date Performed</th><th>Remarks</th></tr>
+    <tr><th>Case Number</th><th>Client Name</th><th>Action</th><th>Date Performed</th><th>Remarks</th><th>Owner</th></tr>
 {{ for r in rows:}}
     <tr>
         <td>{{=r.case_id.case_number}}</td>
@@ -15,6 +15,7 @@ From: <b>{{=fd}} </b> To: <b>{{=td}}</b>
         <td>{{=r.action_id.action_name}}</td>
         <td>{{=r.date_performed}}</td>
         <td>{{=r.remarks}}</td>
+        <td>{{=r.case_id.assigned_to.last_name}}</td>
     </tr>
 {{pass}}
 </table>
