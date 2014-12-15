@@ -1,7 +1,7 @@
 # coding: utf8
 
 def get_ifxpw():
-    return 'vap--or'
+    return 'password'
 
 def get_mssqlpw():
-    return 'xiiu12iphe'
+    return 'password'
